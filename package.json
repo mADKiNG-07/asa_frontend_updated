@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "gh-deploy-init": "git push origin && git subtree push --prefix dist origin gh-pages"
   },
   "dependencies": {
     "axios": "^1.6.4",
