@@ -234,7 +234,7 @@ export default {
           if (this.ascending) {
             return a.subject.localeCompare(b.subject);
           } else {
-            return b.subject.localeCompare(a.subject); 
+            return b.subject.localeCompare(a.subject);
           }
         } else if (this.sortBy == "Location") {
           if (this.ascending) {
