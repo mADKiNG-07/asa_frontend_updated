@@ -288,7 +288,7 @@ export default {
         const apiUrl = "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
 
         const response = await fetch(`${apiUrl}/api/lessons/${lessonId}`, {
-          method: "PUT",
+          method: "PUT", 
           headers: {
             "Content-Type": "application/json",
           },
