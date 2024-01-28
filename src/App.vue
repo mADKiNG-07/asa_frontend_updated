@@ -263,7 +263,7 @@ export default {
     // Update this method based on your existing methods
     async fetchLessons() {
       try {
-        const apiUrl = "http://localhost:3000"; // Replace with your actual API URL
+        const apiUrl = "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
 
         const response = await fetch(`${apiUrl}/api/lessons`);
         if (!response.ok) {
@@ -279,13 +279,13 @@ export default {
 
     getLessonImageUrl(imageName) {
       // Replace 'http://localhost:3001' with your actual API server URL
-      return `http://localhost:3000/api/lessons/lesson-images/${imageName}`;
+      return `http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com/api/lessons/lesson-images/${imageName}`;
     },
 
     // update spaces (PUT)
     async updateLessonSpace(lessonId, newSpaces) {
       try {
-        const apiUrl = "http://localhost:3000"; // Replace with your actual API URL
+        const apiUrl = "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
 
         const response = await fetch(`${apiUrl}/api/lessons/${lessonId}`, {
           method: "PUT",
@@ -382,7 +382,7 @@ export default {
           number: this.order.PhoneNumber,
           lesson: order,
         };
-        fetch("http://localhost:3000/api/orders", {
+        fetch("http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com/api/orders", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
