@@ -1,0 +1,20 @@
+{
+  "name": "After School Activities",
+  "short_name": "School Activities",
+  "description": "Discover and sign up for student after-school activities hassle-free.",
+  "icons": [
+    {
+      "src": "./src/assets/icon.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "./src/assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "index.html",
+  "display": "fullscreen",
+  "background_color": "#212529"
+}

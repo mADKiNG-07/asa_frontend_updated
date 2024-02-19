@@ -1,5 +1,7 @@
 <script setup>
 import { RouterLink, RouterView } from "vue-router";
+import Lesson from "./components/Lessons.vue"; // Import the Lesson component
+import Checkout from "./components/Checkout.vue"; // Import the Checkout component
 </script>
 
 <template>
@@ -35,156 +37,29 @@ import { RouterLink, RouterView } from "vue-router";
       </div>
     </header>
     <main>
-      <!-- Lesson page -->
       <div v-if="showLesson" class="container-fluid p-5">
-        <!--  Sorting category -->
-        <div class="p-3">
-          <select
-            class="btn btn-dark dropdown-toggle"
-            type="button"
-            data-toggle="dropdown"
-            v-model="sortBy"
-          >
-            <option disabled value="default">Choose your preference</option>
-            <option value="Price">Price</option>
-            <option value="Location">Location</option>
-            <option value="Spaces">Spaces</option>
-            <option value="Subject">Subject</option>
-          </select>
-          <button class="btn btn-dark" @click="sortData">
-            <span class="fas fa-long-arrow-alt-up"></span>
-          </button>
-          <button class="btn btn-dark" @click="sortDataDesc">
-            <span class="fas fa-long-arrow-alt-down"></span>
-          </button>
-        </div>
-        <div v-for="lesson in filteredAndSortedLessons" class="d-flex p-2">
-          <div class="p-2">
-            <figure>
-              <img :src="getLessonImageUrl(lesson.image)" alt="Lesson Image" />
-            </figure>
-          </div>
-          <div class="p-3">
-            <h2 v-text="lesson.subject"></h2>
-            <p v-text="lesson.location"></p>
-            <p>Price: {{ lesson.price }}</p>
-            <p v-if="lesson.spaces === cartCount(lesson.id)"></p>
-            <p v-else>
-              This Lesson space remains
-              {{ lesson.spaces - cartCount(lesson.id) }} spaces
-            </p>
-            <button
-              class="btn btn-primary"
-              v-on:click="addToCart(lesson)"
-              v-if="canAddToCart(lesson)"
-            >
-              Add to cart
-            </button>
-            <button class="btn btn-secondary" disabled="disabled" v-else>
-              Add to cart
-            </button>
-            <span v-if="lesson.spaces === cartCount(lesson.id)"
-              >No more available spaces!</span
-            >
-            <span v-else-if="lesson.spaces - cartCount(lesson.id) < 5"
-              >Only few left!</span
-            >
-            <span v-else>Buy now!</span>
-            <div>
-              <span v-for="n in lesson.rating">★</span>
-              <span v-for="n in 5 - lesson.rating">☆</span>
-            </div>
-          </div>
-        </div>
+        <!-- Lesson page -->
+        <Lesson
+          :lessons="filteredAndSortedLessons"
+          :getLessonImageUrl="getLessonImageUrl"
+          :cartCount="cartCount"
+          :canAddToCart="canAddToCart"
+          :sortData="sortData"
+          :sortDataDesc="sortDataDesc"
+          @sort-by-change="updateSortBy"
+          @add-item-to-cart="addToCart"
+        />
       </div>
       <div v-else class="container p-5">
-        <div v-if="sortedCart.length === 0" class="container p-5">
-          <button class="btn btn-warning" v-on:click="goToHome">
-            Back to Home Page
-          </button>
-        </div>
-        <div v-else class="container p-5">
-          <div v-for="Lesson in sortedCart" class="d-flex p-2">
-            <div class="p-2">
-              <figure>
-                <img
-                  :src="getLessonImageUrl(Lesson.image)"
-                  alt="Lesson Image"
-                />
-              </figure>
-            </div>
-            <div class="p-3">
-              <h2 v-text="Lesson.subject"></h2>
-              <p v-text="Lesson.location"></p>
-              <p>Price: {{ Lesson.price }}</p>
-              <p>Quantity: {{ Lesson.quantity }}</p>
-              <button
-                class="btn btn-danger"
-                v-on:click="removeFromCart(Lesson)"
-              >
-                Remove
-              </button>
-
-              <div>
-                <span v-for="n in Lesson.rating">★</span>
-                <span v-for="n in 5 - Lesson.rating">☆</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- Checkout page -->
-        <h2>Checkout</h2>
-        <div class="mb-3 mt-3">
-          <p>
-            <strong>Your Full Name:</strong>
-            <!-- regular expressions -->
-            <input
-              class="form-control"
-              pattern="[a-zA-Z]+"
-              title="Only text input is allowed"
-              required
-              oninput="this.value = this.value.replace(/[^a-zA-Z- ]/g, '')"
-              v-model="order.FullName"
-              placeholder="letters only"
-            />
-            <span
-              v-if="!order.isNameValid && order.FullName.length === 0"
-              class="text-danger"
-              >Name is required</span
-            >
-            <span
-              v-if="!order.isNameValid && order.FullName.length > 0"
-              class="text-danger"
-              >Invalid name</span
-            >
-          </p>
-        </div>
-        <div>
-          <p>
-            <strong>Phone Number:</strong>
-            <!-- regular expressions -->
-            <input
-              class="form-control"
-              pattern="[0-9]+"
-              title="Only numbers input is allowed"
-              required
-              oninput="this.value = this.value.replace(/[^0-9-+]/g, '')"
-              v-model="order.PhoneNumber"
-              placeholder="numbers only"
-            />
-            <span
-              v-if="!order.isPhoneValid && order.PhoneNumber.length === 0"
-              class="text-danger"
-              >Phone number is required</span
-            >
-          </p>
-        </div>
-        <h2>Order Information</h2>
-        <p>Full Name: {{ order.FullName }}</p>
-        <p>Phone Number: {{ order.PhoneNumber }}</p>
-        <button class="btn btn-primary" v-on:click="submitForm">
-          Place Order
-        </button>
+        <!-- CheckOut Page -->
+        <Checkout
+          :sortedCart="sortedCart"
+          :goToHome="goToHome"
+          :getLessonImageUrl="getLessonImageUrl"
+          @remove-item-from-cart="removeFromCart"
+          :order="order"
+          :submitForm="submitForm"
+        />
       </div>
     </main>
   </div>
@@ -192,9 +67,13 @@ import { RouterLink, RouterView } from "vue-router";
 
 <script>
 export default {
+  components: {
+    Lesson, // Register the Lesson component
+    Checkout, // Register the Checkout component
+  },
   data() {
     return {
-      sitename: "After school activities", // Replace with your site name
+      sitename: "After School Activities",
       searchInput: "",
       showLesson: true, // Initial state, modify as needed
       sortBy: "default", // Initial state, modify as needed
@@ -202,7 +81,6 @@ export default {
       Lessons: [], // Your lessons array
       Lesson: {}, // Your single lesson object
       cart: [],
-      filteredAndSortedLessons: [],
       order: {
         FullName: "",
         PhoneNumber: "",
@@ -259,11 +137,15 @@ export default {
     },
   },
   methods: {
-    // ... (your existing methods)
+    updateSortBy(newSortBy) {
+      // Update sortBy property in the parent component
+      this.sortBy = newSortBy;
+    },
     // Update this method based on your existing methods
     async fetchLessons() {
       try {
-        const apiUrl = "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
+        const apiUrl =
+          "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
 
         const response = await fetch(`${apiUrl}/api/lessons`);
         if (!response.ok) {
@@ -285,7 +167,8 @@ export default {
     // update spaces (PUT)
     async updateLessonSpace(lessonId, newSpaces) {
       try {
-        const apiUrl = "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
+        const apiUrl =
+          "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
 
         const response = await fetch(`${apiUrl}/api/lessons/${lessonId}`, {
           method: "PUT",
@@ -382,13 +265,16 @@ export default {
           number: this.order.PhoneNumber,
           lesson: order,
         };
-        fetch("http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com/api/orders", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(data),
-        })
+        fetch(
+          "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com/api/orders",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+          }
+        )
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);
