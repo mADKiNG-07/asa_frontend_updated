@@ -6,7 +6,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/After-school-classes-and-activities_Fontend/",
+  base: "/asa_frontend_updated/",
   plugins: [
     vue(),
     vueJsx(),
