@@ -67,6 +67,11 @@ import Checkout from "./components/Checkout.vue"; // Import the Checkout compone
 
 <script>
 export default {
+  created: function () {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("service-worker.js");
+    }
+  },
   components: {
     Lesson, // Register the Lesson component
     Checkout, // Register the Checkout component
