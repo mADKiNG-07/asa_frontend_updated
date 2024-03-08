@@ -4,8 +4,6 @@ const cacheName = 'asa-cache';
 const urlsToCache = [
   './',
   './index.html',
-  './icon-512.png',
-  './icon.png'
 ];
 
 self.addEventListener("install", function (e) {

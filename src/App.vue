@@ -37,6 +37,37 @@ import Checkout from "./components/Checkout.vue"; // Import the Checkout compone
       </div>
     </header>
     <main>
+      <br />
+      <br />
+      <br />
+      <br />
+      <!-- test -->
+      <div class="d-flex">
+        <!--  -->
+        <div>
+          <strong class="test-elem">HTTPS Test: </strong>
+          <a v-bind:href="serverURL" target="_blank">link</a>
+        </div>
+        <!--  -->
+        <div>
+          <button @click="deleteAllCaches" class="test-elem">
+            <span class="fas fa-trash"></span>
+            Delete All Caches
+          </button>
+        </div>
+        <!--  -->
+        <div>
+          <button @click="unregisterAllServiceWorkers" class="test-elem">
+            <span class="fab fa-uniregistry"></span>
+            Unregister All ServiceWorkers
+          </button>
+        </div>
+        <!--  -->
+        <button @click="reloadPage" class="test-elem">
+          <span class="fas fa-sync"></span>
+          Reload Page
+        </button>
+      </div>
       <div v-if="showLesson" class="container-fluid p-5">
         <!-- Lesson page -->
         <Lesson
@@ -67,11 +98,6 @@ import Checkout from "./components/Checkout.vue"; // Import the Checkout compone
 
 <script>
 export default {
-  created: function () {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("service-worker.js");
-    }
-  },
   components: {
     Lesson, // Register the Lesson component
     Checkout, // Register the Checkout component
@@ -79,6 +105,7 @@ export default {
   data() {
     return {
       sitename: "After School Activities",
+      serverURL: "https://asa-backend.onrender.com",
       searchInput: "",
       showLesson: true, // Initial state, modify as needed
       sortBy: "default", // Initial state, modify as needed
@@ -142,6 +169,26 @@ export default {
     },
   },
   methods: {
+    reloadPage() {
+      window.location.reload();
+    },
+
+    unregisterAllServiceWorkers() {
+      navigator.serviceWorker.getRegistrations().then(function (registrations) {
+        for (let registration of registrations) {
+          registration.unregister();
+        }
+      });
+      console.log("ServiceWorkers Unregistered");
+    },
+
+    deleteAllCaches() {
+      caches.keys().then(function (names) {
+        for (let name of names) caches.delete(name);
+      });
+      console.log("All Caches Deleted");
+    },
+
     updateSortBy(newSortBy) {
       // Update sortBy property in the parent component
       this.sortBy = newSortBy;
@@ -149,10 +196,11 @@ export default {
     // Update this method based on your existing methods
     async fetchLessons() {
       try {
-        const apiUrl =
-          "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
+        const apiUrl = "https://asa-backend.onrender.com"; // Replace with your actual API URL
 
-        const response = await fetch(`${apiUrl}/api/lessons`);
+        const response = await fetch(`${apiUrl}/api/lessons`, {
+          referrerPolicy: "unsafe-url",
+        });
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
@@ -166,14 +214,13 @@ export default {
 
     getLessonImageUrl(imageName) {
       // Replace 'http://localhost:3001' with your actual API server URL
-      return `http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com/api/lessons/lesson-images/${imageName}`;
+      return `https://asa-backend.onrender.com/api/lessons/lesson-images/${imageName}`;
     },
 
     // update spaces (PUT)
     async updateLessonSpace(lessonId, newSpaces) {
       try {
-        const apiUrl =
-          "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com"; // Replace with your actual API URL
+        const apiUrl = "https://asa-backend.onrender.com"; // Replace with your actual API URL
 
         const response = await fetch(`${apiUrl}/api/lessons/${lessonId}`, {
           method: "PUT",
@@ -270,16 +317,13 @@ export default {
           number: this.order.PhoneNumber,
           lesson: order,
         };
-        fetch(
-          "http://after-school-classes-and-activit-env-1.eba-jnm2dueu.eu-north-1.elasticbeanstalk.com/api/orders",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          }
-        )
+        fetch("https://asa-backend.onrender.com/api/orders", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        })
           .then((response) => {
             if (!response.ok) {
               throw new Error(`HTTP error! Status: ${response.status}`);

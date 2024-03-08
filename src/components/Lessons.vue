@@ -4,7 +4,6 @@
   <div class="p-3">
     <select
       class="btn btn-dark dropdown-toggle"
-      type="button"
       data-toggle="dropdown"
       v-model="sortBy"
       @change="emitSortBy"
@@ -65,6 +64,7 @@
 
 <script>
 export default {
+  emits: ["sort-by-change", "add-item-to-cart"],
   props: {
     lessons: Array, // Pass lessons array as a prop
     getLessonImageUrl: Function,
